@@ -16,7 +16,9 @@ export const getStory = async (id: string) => {
   return chat
 }
 
-export const saveStory = async (story: Omit<Story, 'userId' | 'title'>) => {
+export const saveStory = async (
+  story: Omit<Story, 'userId'> & { title?: string }
+) => {
   const pipeline = redis.pipeline()
   const userId = ip()
 

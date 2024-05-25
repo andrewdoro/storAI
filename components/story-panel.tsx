@@ -102,15 +102,12 @@ export function StoryPanel() {
 
           if (!id) {
             const newId = nanoid()
-            await saveStory(
-              {
-                id: newId,
-                edges: formatEdges,
-                nodes: formatNodes,
-                title: (title ?? value) as string
-              },
-              newId
-            )
+            await saveStory({
+              id: newId,
+              edges: formatEdges,
+              nodes: formatNodes,
+              title: (title ?? value) as string
+            })
 
             window.history.replaceState(
               {},
