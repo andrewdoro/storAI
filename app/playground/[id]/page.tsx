@@ -1,5 +1,4 @@
 import React from 'react'
-import { GraphStore } from '@/lib/store'
 import { getStory } from '@/lib/actions/story'
 import PlaygroundWrapper from '../_components/PlaygroundWrapper'
 

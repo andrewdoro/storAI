@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils'
 import { ThemeProvider } from '@/components/theme-provider'
 import Header from '@/components/header'
 import Footer from '@/components/footer'
-import { Sidebar } from '@/components/sidebar'
 import { Toaster } from '@/components/ui/sonner'
 
 const fontSans = FontSans({
@@ -58,7 +57,7 @@ export default function RootLayout({
           {children}
           {/* <Sidebar /> */}
           <Footer />
-          <Toaster />
+          <Toaster position="top-right" />
         </ThemeProvider>
       </body>
     </html>

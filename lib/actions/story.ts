@@ -16,15 +16,16 @@ export const getStory = async (id: string) => {
   return chat
 }
 
-export const saveStory = async (story: Omit<Story, 'userId'>, id: string) => {
+export const saveStory = async (story: Omit<Story, 'userId' | 'title'>) => {
   const pipeline = redis.pipeline()
-
   const userId = ip()
-  pipeline.hmset(`story:${id}`, story)
+
+  pipeline.hmset(`story:${story.id}`, story)
   pipeline.zadd(`user:story:${userId}`, {
     score: Date.now(),
-    member: `story:${id}`
+    member: `story:${story.id}`
   })
+
   await pipeline.exec()
 }
 
