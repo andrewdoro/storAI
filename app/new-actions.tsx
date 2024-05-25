@@ -5,14 +5,16 @@ import { CoreMessage, generateObject } from 'ai'
 import { openai } from '@ai-sdk/openai'
 import { z } from 'zod'
 
-export async function continueConversation({
+export async function generateTopics({
   lastPrompt,
   lastSummary,
-  prompt
+  prompt,
+  withTitle
 }: {
   lastPrompt: string
   lastSummary: string
   prompt?: string
+  withTitle?: boolean
 }) {
   'use server'
 
@@ -32,6 +34,7 @@ export async function continueConversation({
       `,
 
     schema: z.object({
+      ...(withTitle && { title: z.string().max(200) }),
       topics: z
         .array(
           z.object({
@@ -43,15 +46,5 @@ export async function continueConversation({
     })
   })
 
-  console.log(`You are an Teacher assistant. Your role is to assist the user in their task. 
-  The user asks you a question, and you response with of series of topcis required to learn relevant information for that domain
-  
- This is the last prompt: ${lastPrompt} Focus on this this is very important
- This is the last prompt summary: ${lastSummary}
-
- Also take into consideration users's prompt:
- ${prompt}
-
-  `)
-  return { topics: result.object }
+  return result.object
 }

@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react'
 import Textarea from 'react-textarea-autosize'
 
 import { useGraphStore } from '@/lib/store'
-import { continueConversation } from '@/app/new-actions'
+import { generateTopics } from '@/app/new-actions'
 import { nanoid } from 'ai'
 import { Edge, Node } from 'reactflow'
 import { useParams, useRouter } from 'next/navigation'
@@ -66,12 +66,14 @@ export function StoryPanel() {
 
           if (!selectedNode) return
 
-          const { topics } = await continueConversation({
+          const { topics, title } = await generateTopics({
             lastPrompt: selectedNode.data.title,
             lastSummary: selectedNode.data.summary,
-            prompt: value as string
+            prompt: value as string,
+            withTitle: nodes.length === 0
           })
-          const newNodes = topics.topics.map((topic, index) => ({
+
+          const newNodes = topics.map((topic, index) => ({
             id: nanoid(),
             data: {
               title: topic.topic,
@@ -80,7 +82,7 @@ export function StoryPanel() {
             type: 'quiz',
             position: {
               x: selectedNode.position.x + 200,
-              y: selectedNode.position.y + 50 * (index + 1)
+              y: selectedNode.position.y + 100 * (index + 1)
             }
           })) as Node[]
 
@@ -100,7 +102,15 @@ export function StoryPanel() {
 
           if (!id) {
             const newId = nanoid()
-            await saveStory({ edges: formatEdges, nodes: formatNodes }, newId)
+            await saveStory(
+              {
+                id: newId,
+                edges: formatEdges,
+                nodes: formatNodes,
+                title: (title ?? value) as string
+              },
+              newId
+            )
 
             window.history.replaceState(
               {},
