@@ -9,6 +9,8 @@ import { useGraphStore } from '@/lib/store'
 import { continueConversation } from '@/app/new-actions'
 import { nanoid } from 'ai'
 import { Edge, Node } from 'reactflow'
+import { useParams, useRouter } from 'next/navigation'
+import { saveStory } from '@/lib/actions/story'
 
 export function StoryPanel() {
   const [input, setInput] = useState('')
@@ -22,20 +24,53 @@ export function StoryPanel() {
   const setNodes = useGraphStore(state => state.setNodes)
   const setEdges = useGraphStore(state => state.setEdges)
 
+  const { id } = useParams()
+  const router = useRouter()
+
   useEffect(() => {
     // focus on input when the page loads
     inputRef.current?.focus()
   }, [])
+
+  const disabled = nodes.length > 1 && !selectedNodeId
   return (
     <div className={'w-full flex flex-col items-center justify-center'}>
       <form
         onSubmit={async e => {
           e.preventDefault()
-          const node = nodes.find(node => node.id === selectedNodeId)
+          const findNode = nodes.find(node => node.id === selectedNodeId)
+          const data = new FormData(e.currentTarget)
+          const value = data.get('input')
 
-          if (!node) return
+          let selectedNode = findNode
+          const oldNodes = [...nodes]
 
-          const { topics } = await continueConversation(node.data)
+          if (nodes.length === 0) {
+            const newNode = {
+              id: nanoid(),
+              data: {
+                title: value,
+                summary: ''
+              },
+              type: 'quiz',
+              position: {
+                x: 0,
+                y: 0
+              }
+            }
+            selectedNode = newNode
+            oldNodes.push(newNode)
+
+            setNodes([newNode])
+          }
+
+          if (!selectedNode) return
+
+          const { topics } = await continueConversation({
+            lastPrompt: selectedNode.data.title,
+            lastSummary: selectedNode.data.summary,
+            prompt: value as string
+          })
           const newNodes = topics.topics.map((topic, index) => ({
             id: nanoid(),
             data: {
@@ -44,26 +79,41 @@ export function StoryPanel() {
             },
             type: 'quiz',
             position: {
-              x: node.position.x + 200,
-              y: node.position.y + 50 * (index + 1)
+              x: selectedNode.position.x + 200,
+              y: selectedNode.position.y + 50 * (index + 1)
             }
           })) as Node[]
 
           const newEdges = newNodes.map(node => ({
-            id: `${node.id}-${selectedNodeId}`,
-            source: selectedNodeId,
+            id: `${node.id}-${selectedNode.id}`,
+            source: selectedNode.id,
             target: node.id,
             sourceHandle: 'a',
             targetHandleId: 'b'
           })) as Edge[]
-          setNodes([...nodes, ...newNodes])
-          setEdges([...edges, ...newEdges])
+
+          const formatNodes = [...oldNodes, ...newNodes] as Node[]
+          const formatEdges = [...edges, ...newEdges] as Edge[]
+
+          setNodes(formatNodes)
+          setEdges(formatEdges)
+
+          if (!id) {
+            const newId = nanoid()
+            await saveStory({ edges: formatEdges, nodes: formatNodes }, newId)
+
+            window.history.replaceState(
+              {},
+              `/playground/${newId}`,
+              `/playground/${newId}`
+            )
+          }
         }}
         className="w-full px-6"
       >
         <div className="relative flex items-center w-full">
           <Textarea
-            disabled={selectedNodeId === null}
+            disabled={disabled}
             ref={inputRef}
             name="input"
             rows={1}
@@ -72,7 +122,7 @@ export function StoryPanel() {
             placeholder="Ask a question..."
             spellCheck={false}
             value={input}
-            className="resize-none w-full min-h-12 rounded-fill bg-muted border border-input pl-4 pr-10 pt-3 pb-1 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'"
+            className="resize-none w-full disabled:opacity-50 min-h-12 rounded-fill bg-muted border border-input pl-4 pr-10 pt-3 pb-1 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'"
             onChange={e => {
               setInput(e.target.value)
               setShowEmptyScreen(e.target.value.length === 0)

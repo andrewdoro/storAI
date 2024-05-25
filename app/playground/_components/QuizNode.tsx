@@ -32,6 +32,9 @@ const QuizNode = ({
         )}
       >
         {title}
+        <p className="text-xs max-w-xs text-muted-foreground line-clamp-2">
+          {summary}
+        </p>
       </div>
       {/* <input
         className="nodrag"

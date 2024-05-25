@@ -39,39 +39,41 @@ type RFState = {
   setSelectedNodeId: (id: string | null) => void
 }
 
-export const GraphStore = createZustandContext(() => {
-  return createStore<RFState>((set, get) => ({
-    selectedNodeId: null,
-    nodes: initialNodes,
-    edges: initialEdges,
-    onNodesChange: (changes: NodeChange[]) => {
-      set({
-        nodes: applyNodeChanges(changes, get().nodes)
-      })
-    },
-    onEdgesChange: (changes: EdgeChange[]) => {
-      set({
-        edges: applyEdgeChanges(changes, get().edges)
-      })
-    },
-    onConnect: (connection: Connection) => {
-      set({
-        edges: addEdge(connection, get().edges)
-      })
-    },
+export const GraphStore = createZustandContext(
+  ({ edges, nodes }: Pick<RFState, 'edges' | 'nodes'>) => {
+    return createStore<RFState>((set, get) => ({
+      selectedNodeId: null,
+      nodes,
+      edges,
+      onNodesChange: (changes: NodeChange[]) => {
+        set({
+          nodes: applyNodeChanges(changes, get().nodes)
+        })
+      },
+      onEdgesChange: (changes: EdgeChange[]) => {
+        set({
+          edges: applyEdgeChanges(changes, get().edges)
+        })
+      },
+      onConnect: (connection: Connection) => {
+        set({
+          edges: addEdge(connection, get().edges)
+        })
+      },
 
-    setNodes: (nodes: Node[]) => {
-      set({ nodes })
-    },
-    setEdges: (edges: Edge[]) => {
-      set({ edges })
-    },
-    setSelectedNodeId: id =>
-      set({
-        selectedNodeId: id
-      })
-  }))
-})
+      setNodes: (nodes: Node[]) => {
+        set({ nodes })
+      },
+      setEdges: (edges: Edge[]) => {
+        set({ edges })
+      },
+      setSelectedNodeId: id =>
+        set({
+          selectedNodeId: id
+        })
+    }))
+  }
+)
 
 export const useGraphStore = <T>(selector: (state: RFState) => T) =>
   useStore(GraphStore.useContext(), selector)
