@@ -1,5 +1,4 @@
 'use client'
-import { Spinner } from '@/components/ui/spinner'
 import { saveStory } from '@/lib/actions/story'
 import { useGraphStore } from '@/lib/store'
 import { minDelay } from '@/lib/utils'
@@ -36,14 +35,17 @@ const PlaygroundUpdate = () => {
     1000
   )
 
+  const filterSelected = nodes.map(({ selected, ...rest }) => rest)
+
   useEffect(() => {
     setTimeout(() => (wait.current = true), 3000)
   }, [])
   useEffect(() => {
     if (!wait.current) return
-    debounceUpdate({ id: id as string, nodes, edges })
+
+    debounceUpdate({ id: id as string, nodes: filterSelected, edges })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(edges), JSON.stringify(nodes)])
+  }, [JSON.stringify(edges), JSON.stringify(filterSelected)])
 
   return null
 }

@@ -1,9 +1,9 @@
 'use server'
 
-import { createStreamableValue } from 'ai/rsc'
-import { CoreMessage, generateObject } from 'ai'
+import { generateObject, streamText } from 'ai'
 import { openai } from '@ai-sdk/openai'
 import { z } from 'zod'
+import { createStreamableValue } from 'ai/rsc'
 
 export async function generateTopics({
   lastPrompt,
@@ -47,4 +47,27 @@ export async function generateTopics({
   })
 
   return result.object
+}
+
+export const generateLessonContent = async ({
+  title,
+  summary
+}: {
+  title: string
+  summary: string
+}) => {
+  const result = await streamText({
+    model: openai('gpt-4-turbo'),
+    prompt: `I want you to imagine that you are a teacher with infinite knowledge about the world. 
+    Your role is to provide concrete and precise information to your students. Write this content in markdown format.
+    
+    Lesson Title: ${title}
+    Lesson Summary: ${summary}
+
+    Max characters 500
+    `
+  })
+
+  const stream = createStreamableValue(result.textStream)
+  return stream.value
 }

@@ -43,13 +43,18 @@ const Playground = () => {
   return (
     <div className="relative w-full flex flex-col gap-8 py-4 col-span-4">
       <ReactFlow
+        snapToGrid
         className="border-b"
+        snapGrid={snapGrid}
         nodes={nodes}
         onNodesChange={onNodesChange}
         edges={edges}
         onEdgesChange={onEdgesChange}
         onSelectionChange={onChange}
         fitView
+        proOptions={{
+          hideAttribution: true
+        }}
         nodeTypes={nodeTypes}
       >
         <Background />

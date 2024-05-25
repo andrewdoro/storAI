@@ -1,13 +1,32 @@
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 import React, { memo } from 'react'
 import { Handle, Position } from 'reactflow'
+import QuizDialog from './QuizDialog'
 
 const QuizNode = ({
+  id,
   data,
   isConnectable,
   selected,
   ...rest
 }: {
+  id: string
   data: {
     title: string
     summary: string
@@ -22,26 +41,20 @@ const QuizNode = ({
         id="a"
         type="target"
         position={Position.Left}
-        onConnect={params => console.log('handle onConnect', params)}
         isConnectable={isConnectable}
       />
-      <div
-        className={cn(
-          'p-4 border rounded-md bg-background hover:bg-accent',
-          selected && 'bg-accent'
-        )}
-      >
-        {title}
-        <p className="text-xs max-w-xs text-muted-foreground line-clamp-2">
-          {summary}
-        </p>
-      </div>
-      {/* <input
-        className="nodrag"
-        type="color"
-        onChange={data.onChange}
-        defaultValue={data.color}
-      /> */}
+      <Card className={cn('border-primary', selected && 'bg-accent')}>
+        <CardHeader className="p-4">
+          <CardTitle className="text-xl">{title}</CardTitle>
+          {summary && (
+            <CardDescription className="max-w-sm text-lg line-clamp-2">
+              {summary}
+            </CardDescription>
+          )}
+        </CardHeader>
+
+        {summary && <QuizDialog id={id} summary={summary} title={title} />}
+      </Card>
       <Handle
         type="source"
         position={Position.Right}
