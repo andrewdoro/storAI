@@ -10,7 +10,7 @@ const PlaygroundLayout = async ({ children }: { children: ReactNode }) => {
   const stories = await getStories()
   return (
     <div className="grid grid-cols-5 mb-8 h-[calc(100vh-57px)]">
-      <div className="flex flex-col border-r gap-2 p-4">
+      <div className="md:flex flex-col border-r hidden gap-2 p-4">
         <p className="text-lg flex gap-2 tracking-tight font-semibold">
           <Bot />
           Chats

@@ -41,7 +41,7 @@ const Playground = () => {
   const nodeTypes = useMemo(() => ({ quiz: QuizNode }), [])
 
   return (
-    <div className="relative w-full flex flex-col gap-8 py-4 col-span-4">
+    <div className="relative w-full flex flex-col gap-8 py-4 col-span-5 md:col-span-4 ">
       <ReactFlow
         snapToGrid
         className="border-b"

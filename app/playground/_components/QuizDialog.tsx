@@ -27,8 +27,12 @@ const QuizDialog = ({ id, summary, title }: QuizDialogProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm" className="w-full rounded-none rounded-b-md">
-          Quiz
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full rounded-none rounded-b-md"
+        >
+          See lesson
         </Button>
       </DialogTrigger>
       <DialogContent className={cn(content && 'max-w-5xl mx-auto')}>

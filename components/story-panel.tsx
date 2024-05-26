@@ -81,8 +81,8 @@ export function StoryPanel() {
             },
             type: 'quiz',
             position: {
-              x: selectedNode.position.x + 200,
-              y: selectedNode.position.y + 100 * (index + 1)
+              x: selectedNode.position.x + 400,
+              y: selectedNode.position.y + 200 * (index + 1)
             }
           })) as Node[]
 
