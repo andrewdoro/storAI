@@ -22,7 +22,15 @@ export const metadata: Metadata = {
   description,
   openGraph: {
     title,
-    description
+    description,
+    images: [
+      {
+        url: new URL('https://stor-ai.vercel.app/og-image.png'),
+        width: 1200,
+        height: 630,
+        alt: title
+      }
+    ]
   },
   twitter: {
     title,
