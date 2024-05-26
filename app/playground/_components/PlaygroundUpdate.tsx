@@ -37,8 +37,11 @@ const PlaygroundUpdate = () => {
 
   const filterSelected = nodes.map(({ selected, ...rest }) => rest)
 
+  console.log(wait.current)
   useEffect(() => {
-    setTimeout(() => (wait.current = true), 3000)
+    setTimeout(() => {
+      wait.current = true
+    }, 1000)
   }, [])
   useEffect(() => {
     if (!wait.current) return
