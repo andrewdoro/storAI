@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description,
     images: [
       {
-        url: new URL('https://stor-ai.vercel.app/og-image.png'),
+        url: new URL('https://stor-ai.vercel.app/og-test.png'),
         width: 1200,
         height: 630,
         alt: title
