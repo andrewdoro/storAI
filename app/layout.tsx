@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils'
 import { ThemeProvider } from '@/components/theme-provider'
 import Header from '@/components/header'
 import Footer from '@/components/footer'
-import { Sidebar } from '@/components/sidebar'
 import { Toaster } from '@/components/ui/sonner'
 
 const fontSans = FontSans({
@@ -13,9 +12,9 @@ const fontSans = FontSans({
   variable: '--font-sans'
 })
 
-const title = 'Morphic'
+const title = 'storAI'
 const description =
-  'A fully open-source AI-powered answer engine with a generative UI.'
+  'A fully open-source AI-powered platform for learning and teaching.'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://morphic.sh'),
@@ -56,9 +55,8 @@ export default function RootLayout({
         >
           <Header />
           {children}
-          <Sidebar />
           <Footer />
-          <Toaster />
+          <Toaster position="top-right" />
         </ThemeProvider>
       </body>
     </html>
