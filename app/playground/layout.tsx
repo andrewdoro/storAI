@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { Bot, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import PlaygroundSelector from './_components/PlaygroundSelector'
-import PlaygroundUpdate from './_components/PlaygroundUpdate'
 
 const PlaygroundLayout = async ({ children }: { children: ReactNode }) => {
   const stories = await getStories()

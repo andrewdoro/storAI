@@ -53,7 +53,7 @@ export async function getStories() {
 
     const results = await pipeline.exec()
 
-    return results as Story[]
+    return results.filter(value => !!value) as Story[]
   } catch (error) {
     return []
   }

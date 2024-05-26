@@ -1,19 +1,11 @@
 import { Button } from '@/components/ui/button'
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from '@/components/ui/dialog'
+
 import { cn } from '@/lib/utils'
 import React, { memo } from 'react'
 import { Handle, Position } from 'reactflow'
