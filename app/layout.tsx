@@ -17,7 +17,7 @@ const description =
   'A fully open-source AI-powered platform for learning and teaching.'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://morphic.sh'),
+  metadataBase: new URL('https://stor-ai.vercel.app'),
   title,
   description,
   openGraph: {
